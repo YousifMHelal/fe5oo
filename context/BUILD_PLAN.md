@@ -67,10 +67,10 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 5 — Transactions (the cashier's core)
 
-- [ ] **P5-1** Ticket/TicketItem schema confirmed; `actions/tickets.ts` — `createTicket` (line-items: workerId + serviceId; server copies `Service.price` → `priceSnapshot`; computes `total`; rejects inactive worker/service; sets `cashierId` from session), `updateTicket`/`deleteTicket` (**admin-only**). All audited.
-- [ ] **P5-2** `/transactions` page: DataTable of tickets (date, cashier, item count, total, expand → line-items: worker · service · price). Default to `?period=today`. Search + period filter.
-- [ ] **P5-3** `TicketForm`: add one or more line-items (worker select + service select; price auto-fills read-only from catalog; running total). Available to **cashier + admin**.
-- [ ] **P5-4** Edit/delete ticket = admin-only (server-enforced; UI hides for cashier). Confirm dialog.
+- [x] **P5-1** Ticket/TicketItem schema confirmed; `actions/tickets.ts` — `createTicket` (line-items: workerId + serviceId; server copies `Service.price` → `priceSnapshot`; computes `total`; rejects inactive worker/service; sets `cashierId` from session), `updateTicket`/`deleteTicket` (**admin-only**). All audited.
+- [x] **P5-2** `/transactions` page: DataTable of tickets (date, cashier, item count, total, expand → line-items: worker · service · price). Default to `?period=today`. Search + period filter.
+- [x] **P5-3** `TicketForm`: add one or more line-items (worker select + service select; price auto-fills read-only from catalog; running total). Available to **cashier + admin**.
+- [x] **P5-4** Edit/delete ticket = admin-only (server-enforced; UI hides for cashier). Confirm dialog.
 
 **Exit:** cashier can record multi-service tickets with correct catalog prices + totals; admin can edit/delete; all audited. Cashier can read every page but write nothing except tickets (+ own password) — verified server-side.
 
