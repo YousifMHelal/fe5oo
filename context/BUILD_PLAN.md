@@ -78,11 +78,11 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 6 — Overview (analytics)
 
-- [ ] **P6-1** `lib/queries/overview.ts` — period-filtered: total revenue, ticket count, earnings-per-worker (`SUM(priceSnapshot)` grouped by worker), top services (by revenue), daily revenue trend.
-- [ ] **P6-2** KPI row: total revenue + ticket count + (optional avg ticket) `StatCard`s, driven by `?period=`.
-- [ ] **P6-3** Earnings-per-worker **bar chart** (Recharts, `--primary`, sorted desc).
-- [ ] **P6-4** Revenue **trend line/area** (`--secondary`, RTL axis) + **top services** bar/donut.
-- [ ] **P6-5** Wire all to `PeriodFilter`. Empty states for periods with no data.
+- [x] **P6-1** `lib/queries/overview.ts` — period-filtered: total revenue, ticket count, earnings-per-worker (`SUM(priceSnapshot)` grouped by worker), top services (by revenue), daily revenue trend.
+- [x] **P6-2** KPI row: total revenue + ticket count + (optional avg ticket) `StatCard`s, driven by `?period=`.
+- [x] **P6-3** Earnings-per-worker **bar chart** (Recharts, `--primary`, sorted desc).
+- [x] **P6-4** Revenue **trend line/area** (`--secondary`, RTL axis) + **top services** bar/donut.
+- [x] **P6-5** Wire all to `PeriodFilter`. Empty states for periods with no data.
 
 **Exit:** Overview shows correct numbers per Today/7d/30d; matches the transactions data.
 
