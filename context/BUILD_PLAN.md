@@ -90,9 +90,9 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 7 — Users & Roles (admin)
 
-- [ ] **P7-1** User schema + `actions/users.ts` — create (bcrypt hash, assign role), update (name/role/active), **deactivate** (no hard delete), reset password. Audited. Guard: can't deactivate the last active admin.
-- [ ] **P7-2** `/users` page: DataTable (username, fullName, `RoleBadge`, active, created), search.
-- [ ] **P7-3** `UserForm` (add/edit, role select from DB Role table — extensible), deactivate confirm.
+- [x] **P7-1** User schema + `actions/users.ts` — create (bcrypt hash, assign role), update (name/role/active), **deactivate** (no hard delete), reset password. Audited. Guard: can't deactivate the last active admin.
+- [x] **P7-2** `/users` page: DataTable (username, fullName, `RoleBadge`, active, created), search.
+- [x] **P7-3** `UserForm` (add/edit, role select from DB Role table — extensible), deactivate confirm.
 
 **Exit:** admin manages users + role assignment; roles read from DB; audited.
 

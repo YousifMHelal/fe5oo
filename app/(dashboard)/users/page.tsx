@@ -1,11 +1,10 @@
-import { PageHeader } from "@/components/shared/PageHeader";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { requireRole } from "@/lib/auth";
+import { getUsers, getRoles } from "@/actions/users";
+import { UsersClient } from "@/components/users/UsersClient";
 
-export default function UsersPage() {
-  return (
-    <>
-      <PageHeader title="المستخدمون" />
-      <EmptyState title="قيد التطوير" description="إدارة المستخدمين ستكون جاهزة قريباً" />
-    </>
-  );
+export default async function UsersPage() {
+  await requireRole("ADMIN");
+  const [users, roles] = await Promise.all([getUsers(), getRoles()]);
+
+  return <UsersClient users={users} roles={roles} />;
 }

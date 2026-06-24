@@ -37,7 +37,22 @@ export type TicketItemInput = z.infer<typeof ticketItemInputSchema>;
 export type CreateTicketInput = z.infer<typeof createTicketSchema>;
 
 // ── Placeholders — populated phase by phase ──────────────────────────────
-// P7-1: createUserSchema, updateUserSchema
+// ── Users ─────────────────────────────────────────────────────────────────
+export const createUserSchema = z.object({
+  username: z.string().min(3, "اسم المستخدم لا يقل عن 3 أحرف").max(50).regex(/^[a-z0-9_]+$/, "يسمح فقط بالأحرف اللاتينية والأرقام"),
+  fullName: z.string().min(2, "الاسم الكامل مطلوب").max(100),
+  password: z.string().min(6, "كلمة المرور لا تقل عن 6 أحرف"),
+  roleId: z.string().min(1, "الدور مطلوب"),
+});
+
+export const updateUserSchema = z.object({
+  fullName: z.string().min(2, "الاسم الكامل مطلوب").max(100),
+  roleId: z.string().min(1, "الدور مطلوب"),
+  isActive: z.boolean(),
+});
+
+export type CreateUserInput = z.infer<typeof createUserSchema>;
+export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 // P8-2: changePasswordSchema
 // P8-3: settingSchema
 
