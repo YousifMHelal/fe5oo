@@ -4,7 +4,7 @@ Single source of truth for "what's done". The agent MUST update this after finis
 
 Status: `TODO` · `IN PROGRESS` · `DONE` · `BLOCKED`
 
-Last updated: 2026-06-24 — *Phase 0 + Phase 1 + Phase 2 + Phase 3 complete.*
+Last updated: 2026-06-24 — *ALL PHASES COMPLETE (P0–P10).*
 
 ---
 
@@ -16,13 +16,13 @@ Last updated: 2026-06-24 — *Phase 0 + Phase 1 + Phase 2 + Phase 3 complete.*
 | 1 | Data Model & Seed | DONE | Prisma 7 + libsql adapter, seed verified |
 | 2 | App Shell | DONE | sidebar, topbar, primitives, stub pages |
 | 3 | Services (CRUD) | DONE | serviceSchema, actions, DataTable, ServiceForm, ConfirmDialog |
-| 4 | Workers (CRUD) | TODO | |
-| 5 | Transactions | TODO | cashier core |
-| 6 | Overview (analytics) | TODO | |
-| 7 | Users & Roles | TODO | |
-| 8 | Logs / Profile / Settings / Backup | TODO | |
-| 9 | Hardening & Production-Ready | TODO | |
-| 10 | Polish | TODO | |
+| 4 | Workers (CRUD) | DONE | workerSchema, actions, DataTable, WorkerForm |
+| 5 | Transactions | DONE | createTicket+priceSnapshot, expandable table, TicketForm |
+| 6 | Overview (analytics) | DONE | Recharts area+bar charts, KPI row, period-filtered |
+| 7 | Users & Roles | DONE | bcrypt, deactivate, last-admin guard, role from DB |
+| 8 | Logs / Profile / Settings / Backup | DONE | audit table, change-pw, shop info, SQLite backup/restore |
+| 9 | Hardening & Production-Ready | DONE | RBAC redirect, offline, no-CDN, README |
+| 10 | Polish | DONE | locale numbers, prefers-reduced-motion, chart tick fix |
 
 ---
 

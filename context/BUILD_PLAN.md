@@ -126,15 +126,15 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 10 — Polish *(final pass — premium feel)*
 
-- [ ] **P10-1** `ui-ux-pro-max` full review pass — spacing rhythm, hierarchy, density per UI_DESIGN_RULES.
-- [ ] **P10-2** Micro-interactions — hover/dialog/filter transitions ≤150ms; respect `prefers-reduced-motion`; no layout shift.
-- [ ] **P10-3** Visual consistency audit via `ui-registry.md` (imprint) — every page matches tokens, StatCard, StatusPill, table shell, type scale.
-- [ ] **P10-4** Polished empty/loading/error states (skeletons match real layout, friendly Arabic copy).
-- [ ] **P10-5** Chart polish — legends, tooltips, EGP number formatting, RTL axes, color ramps.
-- [ ] **P10-6** Light + dark parity review; brand red vs danger red never confusable; status contrast a11y-safe both themes.
-- [ ] **P10-7** RTL polish — Arabic typography (Cairo/Plex), mirrored icons/charts, no clipping at any breakpoint.
-- [ ] **P10-8** Login + shell + nav first-impression polish (logo, brand red accents).
-- [ ] **P10-9** Final walkthrough on real device widths (mobile/tablet/desktop) × both themes, as admin and as cashier.
+- [x] **P10-1** `ui-ux-pro-max` full review pass — spacing rhythm, hierarchy, density per UI_DESIGN_RULES.
+- [x] **P10-2** Micro-interactions — hover/dialog/filter transitions ≤150ms; respect `prefers-reduced-motion`; no layout shift.
+- [x] **P10-3** Visual consistency audit via `ui-registry.md` (imprint) — every page matches tokens, StatCard, StatusPill, table shell, type scale.
+- [x] **P10-4** Polished empty/loading/error states (skeletons match real layout, friendly Arabic copy).
+- [x] **P10-5** Chart polish — legends, tooltips, EGP number formatting, RTL axes, color ramps.
+- [x] **P10-6** Light + dark parity review; brand red vs danger red never confusable; status contrast a11y-safe both themes.
+- [x] **P10-7** RTL polish — Arabic typography (Cairo/Plex), mirrored icons/charts, no clipping at any breakpoint.
+- [x] **P10-8** Login + shell + nav first-impression polish (logo, brand red accents).
+- [x] **P10-9** Final walkthrough on real device widths (mobile/tablet/desktop) × both themes, as admin and as cashier.
 
 **Exit:** production-ready **and** polished.
 

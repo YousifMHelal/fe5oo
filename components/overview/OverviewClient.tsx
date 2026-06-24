@@ -30,7 +30,7 @@ function ChartCard({ title, children }: { title: string; children: React.ReactNo
   );
 }
 
-const EGP_TICK = (value: number) => formatEGP(value);
+const EGP_TICK = (value: number) => value.toLocaleString("en-US");
 
 export function OverviewClient({ stats }: OverviewClientProps) {
   const { totalRevenue, ticketCount, avgTicket, earningsByWorker, topServices, dailyTrend } = stats;
@@ -42,16 +42,16 @@ export function OverviewClient({ stats }: OverviewClientProps) {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard
           label="إجمالي الإيرادات"
-          value={totalRevenue}
+          value={totalRevenue.toLocaleString("en-US")}
           unit="ج.م"
         />
         <StatCard
           label="عدد المعاملات"
-          value={ticketCount}
+          value={ticketCount.toLocaleString("en-US")}
         />
         <StatCard
           label="متوسط المعاملة"
-          value={avgTicket}
+          value={avgTicket.toLocaleString("en-US")}
           unit="ج.م"
         />
       </div>
