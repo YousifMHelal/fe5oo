@@ -4,7 +4,7 @@ Single source of truth for "what's done". The agent MUST update this after finis
 
 Status: `TODO` · `IN PROGRESS` · `DONE` · `BLOCKED`
 
-Last updated: 2026-06-24 — *Phase 0 + Phase 1 complete.*
+Last updated: 2026-06-24 — *Phase 0 + Phase 1 + Phase 2 + Phase 3 complete.*
 
 ---
 
@@ -14,8 +14,8 @@ Last updated: 2026-06-24 — *Phase 0 + Phase 1 complete.*
 |---|---|---|---|
 | 0 | Scaffold & Foundations | DONE | Next.js 16/Tailwind v4/shadcn/Auth.js v5/RTL |
 | 1 | Data Model & Seed | DONE | Prisma 7 + libsql adapter, seed verified |
-| 2 | App Shell | TODO | |
-| 3 | Services (CRUD) | TODO | proves CRUD pattern |
+| 2 | App Shell | DONE | sidebar, topbar, primitives, stub pages |
+| 3 | Services (CRUD) | DONE | serviceSchema, actions, DataTable, ServiceForm, ConfirmDialog |
 | 4 | Workers (CRUD) | TODO | |
 | 5 | Transactions | TODO | cashier core |
 | 6 | Overview (analytics) | TODO | |
@@ -50,18 +50,18 @@ Last updated: 2026-06-24 — *Phase 0 + Phase 1 complete.*
 ### Phase 2 — Shell
 | ID | Task | Status |
 |---|---|---|
-| P2-1 | (dashboard)/layout + session guard | TODO |
-| P2-2 | AppSidebar (role-filtered, responsive) | TODO |
-| P2-3 | TopBar (period, theme, account) | TODO |
-| P2-4 | Shared primitives (StatCard/DataTable/etc.) | TODO |
+| P2-1 | (dashboard)/layout + session guard | DONE |
+| P2-2 | AppSidebar (role-filtered, responsive) | DONE |
+| P2-3 | TopBar (period, theme, account) | DONE |
+| P2-4 | Shared primitives (StatCard/DataTable/etc.) | DONE |
 | P2-5 | / → role-based redirect | DONE |
 
 ### Phase 3 — Services
 | ID | Task | Status |
 |---|---|---|
-| P3-1 | service schema + actions (audited) | TODO |
-| P3-2 | /services DataTable | TODO |
-| P3-3 | ServiceForm + delete confirm | TODO |
+| P3-1 | service schema + actions (audited) | DONE |
+| P3-2 | /services DataTable | DONE |
+| P3-3 | ServiceForm + delete confirm | DONE |
 
 ### Phase 4 — Workers
 | ID | Task | Status |
@@ -130,6 +130,7 @@ Last updated: 2026-06-24 — *Phase 0 + Phase 1 complete.*
 ---
 
 ## Changelog (newest first)
+- **2026-06-24** — Phase 2 (App Shell) + Phase 3 (Services CRUD) complete. DataTable shared component built with TanStack Table. ServiceForm uses Dialog + react-hook-form + Zod. Soft-delete on referenced services. Build passes 13 routes.
 - **2026-06-24** — Phase 0 + Phase 1 complete. Key discoveries: Next.js 16 renamed `middleware.ts` → `proxy.ts`; Prisma 7 requires `accelerateUrl` or `adapter` (no datasource URL in schema — moved to `prisma.config.ts`); DB lives at repo root `fe5oo.db` (not in `prisma/`); Auth.js v5 needs edge-safe `auth.config.ts` split for proxy to avoid Node.js modules in edge runtime. Seed verified: 2 roles, 2 users, 6 workers, 8 services, 30 tickets.
 - **2026-06-24 (clarifications)** — User added two rules after initial docs: (1) **fully responsive** promoted to hard non-negotiable (ARCHITECTURE §8 #11, AGENTS #11); (2) **cashier reads every page, writes tickets only** (+ own password) — sidebar shows all pages to both roles, write controls gated per-page (ARCHITECTURE §4/§6/§8 #6, AGENTS #6, BUILD_PLAN P2-2/P5/P9-2). Note: AGENTS.md had to be rewritten — earlier write didn't persist.
 - **2026-06-24** — Ran project-architect discovery interview + created the six context docs (ARCHITECTURE, UI_DESIGN_RULES, BUILD_PLAN, PROGRESS_TRACKER, MEMORY, AGENTS). Locked: Next.js 15 + Prisma + SQLite + shadcn + Tailwind v4 + Zod + Auth.js; Arabic-only RTL; light default + dark; integer EGP; Ticket+TicketItem with priceSnapshot; ADMIN/CASHIER RBAC; offline-only with DB backup/restore; brand red+blue palette from logo. No application code written yet.

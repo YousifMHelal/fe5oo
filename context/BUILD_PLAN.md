@@ -47,9 +47,9 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 3 — Services (admin CRUD) *(simplest entity — proves the CRUD pattern first)*
 
-- [ ] **P3-1** `lib/validators.ts` service schema (title, price ≥ 0 int). `actions/services.ts` — create/update/delete (soft-disable if referenced), all audited.
-- [ ] **P3-2** `/services` page: DataTable (title, price `MoneyCell`, status, created), search, sort.
-- [ ] **P3-3** `ServiceForm` dialog (add/edit) + `ConfirmDialog` delete. Admin-only (server + UI).
+- [x] **P3-1** `lib/validators.ts` service schema (title, price ≥ 0 int). `actions/services.ts` — create/update/delete (soft-disable if referenced), all audited.
+- [x] **P3-2** `/services` page: DataTable (title, price `MoneyCell`, status, created), search, sort.
+- [x] **P3-3** `ServiceForm` dialog (add/edit) + `ConfirmDialog` delete. Admin-only (server + UI).
 
 **Exit:** admin can fully manage services; every change appears in AuditLog. CRUD pattern is set for Workers/Users to follow.
 
