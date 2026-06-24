@@ -111,14 +111,14 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 9 — Hardening & Production-Ready
 
-- [ ] **P9-1** Loading skeletons + error states per page/table/chart; empty states everywhere.
-- [ ] **P9-2** RBAC audit — cashier can READ every page; confirm every admin **mutation** (workers/services/users/settings/ticket-edit-delete/backup) rejects cashier server-side, not just hidden. Only create-ticket + change-own-password succeed for cashier.
-- [ ] **P9-3** RTL pass — every page/table/chart mirrors correctly; no clipped Arabic; directional icons mirrored.
-- [ ] **P9-4** Responsive pass — every page at 360px → desktop (sidebar→sheet, tables scroll/stack, charts reflow).
-- [ ] **P9-5** Money audit — all amounts integer EGP via `formatEGP`, tabular numerals, no float anywhere.
-- [ ] **P9-6** Accessibility — focus-visible, labels, color+icon+text status, contrast in both themes.
-- [ ] **P9-7** Offline audit — grep for any external host / CDN font / telemetry; remove. Confirm db + backups stay in-folder.
-- [ ] **P9-8** `README.md` — run instructions (install, migrate, seed, start), seeded credentials, backup/restore steps, how it stays offline.
+- [x] **P9-1** Loading skeletons + error states per page/table/chart; empty states everywhere.
+- [x] **P9-2** RBAC audit — cashier can READ every page; confirm every admin **mutation** (workers/services/users/settings/ticket-edit-delete/backup) rejects cashier server-side, not just hidden. Only create-ticket + change-own-password succeed for cashier.
+- [x] **P9-3** RTL pass — every page/table/chart mirrors correctly; no clipped Arabic; directional icons mirrored.
+- [x] **P9-4** Responsive pass — every page at 360px → desktop (sidebar→sheet, tables scroll/stack, charts reflow).
+- [x] **P9-5** Money audit — all amounts integer EGP via `formatEGP`, tabular numerals, no float anywhere.
+- [x] **P9-6** Accessibility — focus-visible, labels, color+icon+text status, contrast in both themes.
+- [x] **P9-7** Offline audit — grep for any external host / CDN font / telemetry; remove. Confirm db + backups stay in-folder.
+- [x] **P9-8** `README.md` — run instructions (install, migrate, seed, start), seeded credentials, backup/restore steps, how it stays offline.
 
 **Exit:** functionally production-ready, fully offline, RBAC-tight.
 
