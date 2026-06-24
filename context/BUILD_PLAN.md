@@ -35,11 +35,11 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 2 — App Shell
 
-- [ ] **P2-1** `(dashboard)/layout.tsx` — sidebar + topbar + main grid; server-guards session, redirects unauthenticated → `/login`.
-- [ ] **P2-2** `AppSidebar` (shared): logo, nav links with lucide icons (UI §11), active state, **all pages shown to both roles** (cashier reads everything), collapsible rail (`lg+`) + `Sheet` drawer on mobile. Per-page write controls are gated, not the nav.
-- [ ] **P2-3** `TopBar`: shop name, `PeriodFilter` (Today/7d/30d, writes `?period=`), `ThemeToggle`, account menu (name, role badge, logout, profile link).
-- [ ] **P2-4** Shared primitives: `StatCard`, `DataTable` (TanStack), `MoneyCell`, `StatusPill`, `RoleBadge`, `ConfirmDialog`, `EmptyState`, `PageHeader`.
-- [ ] **P2-5** Root `/` → redirect to `/overview` (admin) / `/transactions` (cashier).
+- [x] **P2-1** `(dashboard)/layout.tsx` — sidebar + topbar + main grid; server-guards session, redirects unauthenticated → `/login`.
+- [x] **P2-2** `AppSidebar` (shared): logo, nav links with lucide icons (UI §11), active state, **all pages shown to both roles** (cashier reads everything), collapsible rail (`lg+`) + `Sheet` drawer on mobile. Per-page write controls are gated, not the nav.
+- [x] **P2-3** `TopBar`: shop name, `PeriodFilter` (Today/7d/30d, writes `?period=`), `ThemeToggle`, account menu (name, role badge, logout, profile link).
+- [x] **P2-4** Shared primitives: `StatCard`, `DataTable` (TanStack), `MoneyCell`, `StatusPill`, `RoleBadge`, `ConfirmDialog`, `EmptyState`, `PageHeader`.
+- [x] **P2-5** Root `/` → redirect to `/overview` (admin) / `/transactions` (cashier).
 
 **Exit:** can navigate all role-permitted routes (empty content), period filter updates URL, theme + logout work.
 
