@@ -57,9 +57,9 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 4 — Workers (admin CRUD)
 
-- [ ] **P4-1** Worker schema + `actions/workers.ts` (create/update/delete→soft-disable if referenced, audited).
-- [ ] **P4-2** `/workers` page: DataTable (name, phone, status, created), search, sort.
-- [ ] **P4-3** `WorkerForm` dialog + delete confirm. Admin-only.
+- [x] **P4-1** Worker schema + `actions/workers.ts` (create/update/delete→soft-disable if referenced, audited).
+- [x] **P4-2** `/workers` page: DataTable (name, phone, status, created), search, sort.
+- [x] **P4-3** `WorkerForm` dialog + delete confirm. Admin-only.
 
 **Exit:** admin manages workers; audited.
 

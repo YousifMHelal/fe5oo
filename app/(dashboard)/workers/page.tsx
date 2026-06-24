@@ -1,11 +1,11 @@
-import { PageHeader } from "@/components/shared/PageHeader";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { session } from "@/lib/auth";
+import { getWorkers } from "@/actions/workers";
+import { WorkersClient } from "@/components/workers/WorkersClient";
 
-export default function WorkersPage() {
-  return (
-    <>
-      <PageHeader title="العمال" />
-      <EmptyState title="قيد التطوير" description="إدارة العمال ستكون جاهزة قريباً" />
-    </>
-  );
+export default async function WorkersPage() {
+  const s = await session();
+  const workers = await getWorkers();
+  const isAdmin = s.user.role === "ADMIN";
+
+  return <WorkersClient workers={workers} isAdmin={isAdmin} />;
 }

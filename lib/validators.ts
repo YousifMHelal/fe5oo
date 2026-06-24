@@ -14,8 +14,15 @@ export const serviceSchema = z.object({
 
 export type ServiceInput = z.infer<typeof serviceSchema>;
 
+// ── Workers ──────────────────────────────────────────────────────────────
+export const workerSchema = z.object({
+  name: z.string().min(1, "اسم العامل مطلوب").max(100),
+  phone: z.string().max(20).optional(),
+});
+
+export type WorkerInput = z.infer<typeof workerSchema>;
+
 // ── Placeholders — populated phase by phase ──────────────────────────────
-// P4-1: workerSchema
 // P5-1: ticketSchema, ticketItemSchema
 // P7-1: createUserSchema, updateUserSchema
 // P8-2: changePasswordSchema
