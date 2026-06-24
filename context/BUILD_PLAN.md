@@ -100,10 +100,10 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 8 — Audit Log + Profile + Settings
 
-- [ ] **P8-1** `/logs` page (admin): read-only DataTable of AuditLog (when, actor, action, entity, summaryAr), filter by entity/action + search, row expand → before/after JSON (pretty). Period filter.
-- [ ] **P8-2** `/profile` (all users): `actions/profile.ts` change-password (verify current, bcrypt new, Zod). Show username + role (read-only).
-- [ ] **P8-3** `/settings` (admin): shop info form (name/phone/address → Setting) via `actions/settings.ts`, audited.
-- [ ] **P8-4** Backup/Restore: `app/api/backup/route.ts` — download SQLite file; restore via upload with heavy `ConfirmDialog` (admin-only). Offline durability.
+- [x] **P8-1** `/logs` page (admin): read-only DataTable of AuditLog (when, actor, action, entity, summaryAr), filter by entity/action + search, row expand → before/after JSON (pretty). Period filter.
+- [x] **P8-2** `/profile` (all users): `actions/profile.ts` change-password (verify current, bcrypt new, Zod). Show username + role (read-only).
+- [x] **P8-3** `/settings` (admin): shop info form (name/phone/address → Setting) via `actions/settings.ts`, audited.
+- [x] **P8-4** Backup/Restore: `app/api/backup/route.ts` — download SQLite file; restore via upload with heavy `ConfirmDialog` (admin-only). Offline durability.
 
 **Exit:** full audit visibility, password self-service, shop config + DB backup/restore work.
 

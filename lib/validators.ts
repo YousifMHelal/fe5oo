@@ -53,7 +53,24 @@ export const updateUserSchema = z.object({
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
-// P8-2: changePasswordSchema
-// P8-3: settingSchema
+// ── Profile ───────────────────────────────────────────────────────────────
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "كلمة المرور الحالية مطلوبة"),
+  newPassword: z.string().min(6, "كلمة المرور الجديدة لا تقل عن 6 أحرف"),
+  confirmPassword: z.string().min(1, "تأكيد كلمة المرور مطلوب"),
+}).refine((d) => d.newPassword === d.confirmPassword, {
+  message: "كلمتا المرور غير متطابقتين",
+  path: ["confirmPassword"],
+});
+
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+// ── Settings ─────────────────────────────────────────────────────────────
+export const settingSchema = z.object({
+  shopName: z.string().min(1, "اسم المتجر مطلوب").max(100),
+  phone: z.string().max(20).optional(),
+  address: z.string().max(200).optional(),
+});
+
+export type SettingInput = z.infer<typeof settingSchema>;
 
 export type LoginInput = z.infer<typeof loginSchema>;

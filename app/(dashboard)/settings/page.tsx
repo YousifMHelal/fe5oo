@@ -1,11 +1,9 @@
-import { PageHeader } from "@/components/shared/PageHeader";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { requireRole } from "@/lib/auth";
+import { getSettings } from "@/actions/settings";
+import { SettingsClient } from "@/components/settings/SettingsClient";
 
-export default function SettingsPage() {
-  return (
-    <>
-      <PageHeader title="الإعدادات" />
-      <EmptyState title="قيد التطوير" description="إعدادات المتجر ستكون جاهزة قريباً" />
-    </>
-  );
+export default async function SettingsPage() {
+  await requireRole("ADMIN");
+  const settings = await getSettings();
+  return <SettingsClient settings={settings} />;
 }

@@ -1,11 +1,13 @@
-import { PageHeader } from "@/components/shared/PageHeader";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { session } from "@/lib/auth";
+import { ProfileClient } from "@/components/profile/ProfileClient";
 
-export default function ProfilePage() {
-  return (
-    <>
-      <PageHeader title="ملفي الشخصي" />
-      <EmptyState title="قيد التطوير" description="إعدادات الحساب ستكون جاهزة قريباً" />
-    </>
-  );
+export default async function ProfilePage() {
+  const s = await session();
+  const user = {
+    id: s.user.id,
+    username: s.user.username,
+    fullName: s.user.fullName,
+    role: s.user.role as string,
+  };
+  return <ProfileClient user={user} />;
 }
