@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Role {
+  id     String @id @default(cuid())
+  key    String @unique
+  nameAr String
+  users  User[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  fullName     String
+  roleId       String
+  role         Role     @relation(fields: [roleId], references: [id])
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  tickets      Ticket[] @relation("CashierTickets")
+}
+
+model Worker {
+  id        String          @id @default(cuid())
+  name      String
+  phone     String?
+  isActive  Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  items     TicketItem[]
+  expenses  WorkerExpense[]
+}
+
+model Service {
+  id        String       @id @default(cuid())
+  title     String
+  price     Int
+  isActive  Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  items     TicketItem[]
+}
+
+model Ticket {
+  id        String       @id @default(cuid())
+  total     Int
+  cashierId String
+  cashier   User         @relation("CashierTickets", fields: [cashierId], references: [id])
+  note      String?
+  createdAt DateTime     @default(now())
+  items     TicketItem[]
+}
+
+model TicketItem {
+  id            String  @id @default(cuid())
+  ticketId      String
+  ticket        Ticket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  workerId      String
+  worker        Worker  @relation(fields: [workerId], references: [id])
+  serviceId     String
+  service       Service @relation(fields: [serviceId], references: [id])
+  priceSnapshot Int
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actorName String
+  action    String
+  entity    String
+  entityId  String?
+  summaryAr String
+  before    String?
+  after     String?
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model WorkerExpense {
+  id        String   @id @default(cuid())
+  workerId  String
+  worker    Worker   @relation(fields: [workerId], references: [id])
+  amount    Int
+  note      String?
+  recordedBy String
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,294 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ── Font faces (self-hosted, offline) ─────────────────────────────────── */
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/cairo-arabic-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/cairo-arabic-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/cairo-arabic-600-normal.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/cairo-arabic-700-normal.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/cairo-arabic-800-normal.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/cairo-arabic-900-normal.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Tajawal";
+  src: url("/fonts/Tajawal/Tajawal-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Tajawal";
+  src: url("/fonts/Tajawal/Tajawal-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Tajawal";
+  src: url("/fonts/Tajawal/Tajawal-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Tajawal";
+  src: url("/fonts/Tajawal/Tajawal-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Tajawal";
+  src: url("/fonts/Tajawal/Tajawal-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Tajawal";
+  src: url("/fonts/Tajawal/Tajawal-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Tailwind theme tokens ──────────────────────────────────────────────── */
+@theme inline {
+  --font-sans: "Tajawal", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Cairo", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Neutral scale */
+  --color-neutral-50:  #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+
+  --radius-sm: calc(var(--radius) * 0.75);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.5);
+  --radius-xl: calc(var(--radius) * 2);
+  --radius-2xl: calc(var(--radius) * 3);
+}
+
+/* ── Light ──────────────────────────────────────────────────────────────── */
+:root {
+  /* Surfaces */
+  --background:        #f8fafc;
+  --foreground:        #0f172a;
+  --card:              #ffffff;
+  --card-foreground:   #0f172a;
+  --popover:           #ffffff;
+  --popover-foreground: #0f172a;
+
+  /* Brand */
+  --primary:           #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary:         #f1f5f9;
+  --secondary-foreground: #334155;
+  --muted:             #f1f5f9;
+  --muted-foreground:  #64748b;
+  --accent:            #dbeafe;
+  --accent-foreground: #1d4ed8;
+  --destructive:       #dc2626;
+
+  /* Borders / inputs */
+  --border:            #94a3b8;
+  --input:             #94a3b8;
+  --ring:              #2563eb;
+
+  /* Status */
+  --success:           #059669;
+  --success-foreground: #ffffff;
+  --warning:           #d97706;
+  --warning-foreground: #ffffff;
+  --danger:            #dc2626;
+
+  /* Charts */
+  --chart-1:           #2563eb;
+  --chart-2:           #059669;
+  --chart-3:           #d97706;
+  --chart-4:           #dc2626;
+  --chart-5:           #0891b2;
+
+  --radius: 0.5rem;
+
+  /* Sidebar */
+  --sidebar:           #f1f5f9;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary:   #2563eb;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent:    #dbeafe;
+  --sidebar-accent-foreground: #1d4ed8;
+  --sidebar-border:    #e2e8f0;
+  --sidebar-ring:      #2563eb;
+}
+
+/* ── Dark ───────────────────────────────────────────────────────────────── */
+.dark {
+  /* Surfaces */
+  --background:        #0f172a;
+  --foreground:        #f1f5f9;
+  --card:              #1e293b;
+  --card-foreground:   #f1f5f9;
+  --popover:           #1e293b;
+  --popover-foreground: #f1f5f9;
+
+  /* Brand */
+  --primary:           #3b82f6;
+  --primary-foreground: #0f172a;
+  --secondary:         #1e293b;
+  --secondary-foreground: #cbd5e1;
+  --muted:             #1e293b;
+  --muted-foreground:  #94a3b8;
+  --accent:            #1e3a5f;
+  --accent-foreground: #93c5fd;
+  --destructive:       #ef4444;
+
+  /* Borders / inputs */
+  --border:            #334155;
+  --input:             #1e293b;
+  --ring:              #3b82f6;
+
+  /* Status */
+  --success:           #10b981;
+  --success-foreground: #0f172a;
+  --warning:           #f59e0b;
+  --warning-foreground: #0f172a;
+  --danger:            #ef4444;
+
+  /* Charts */
+  --chart-1:           #3b82f6;
+  --chart-2:           #10b981;
+  --chart-3:           #f59e0b;
+  --chart-4:           #ef4444;
+  --chart-5:           #a78bfa;
+
+  /* Sidebar */
+  --sidebar:           #1e293b;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary:   #3b82f6;
+  --sidebar-primary-foreground: #0f172a;
+  --sidebar-accent:    #1e3a5f;
+  --sidebar-accent-foreground: #93c5fd;
+  --sidebar-border:    #334155;
+  --sidebar-ring:      #3b82f6;
+}
+
+/* ── Base RTL rules ─────────────────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    direction: rtl;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground min-h-screen;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+
+  /* Tabular numerals in money/metric contexts */
+  [data-tabular-nums],
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
