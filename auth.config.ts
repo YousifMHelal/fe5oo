@@ -5,6 +5,7 @@ import Credentials from "next-auth/providers/credentials";
 // Used by proxy.ts (edge runtime) for session/route checks only.
 // Full authorize logic (bcrypt + DB) lives in auth.ts.
 const authConfig: NextAuthConfig = {
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {

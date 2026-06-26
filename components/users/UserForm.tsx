@@ -4,7 +4,7 @@ import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { createUserSchema, updateUserSchema, type CreateUserInput, type UpdateUserInput } from "@/lib/validators";
 import { createUser, updateUser } from "@/actions/users";
 import { Button } from "@/components/ui/button";
@@ -59,12 +59,16 @@ export function UserForm({ open, onOpenChange, user, roles, onSuccess }: UserFor
     }
   }, [open, isEdit, user, roles, createForm, editForm]);
 
+  function handleClose() {
+    onOpenChange(false);
+  }
+
   function onCreateSubmit(data: CreateUserInput) {
     startTransition(async () => {
       try {
         await createUser(data);
         toast.success("تمت إضافة المستخدم");
-        onOpenChange(false);
+        handleClose();
         onSuccess();
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "حدث خطأ");
@@ -77,7 +81,7 @@ export function UserForm({ open, onOpenChange, user, roles, onSuccess }: UserFor
       try {
         await updateUser(user!.id, data);
         toast.success("تم تحديث بيانات المستخدم");
-        onOpenChange(false);
+        handleClose();
         onSuccess();
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "حدث خطأ");
@@ -86,10 +90,23 @@ export function UserForm({ open, onOpenChange, user, roles, onSuccess }: UserFor
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton>
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>{isEdit ? "تعديل المستخدم" : "إضافة مستخدم جديد"}</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle>{isEdit ? "تعديل المستخدم" : "إضافة مستخدم جديد"}</DialogTitle>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className="cursor-pointer"
+              onClick={handleClose}
+              disabled={isPending}
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">إغلاق</span>
+            </Button>
+          </div>
         </DialogHeader>
 
         {isEdit ? (
@@ -102,7 +119,7 @@ export function UserForm({ open, onOpenChange, user, roles, onSuccess }: UserFor
                 <FormItem>
                   <FormLabel>الدور</FormLabel>
                   <FormControl>
-                    <select {...field} className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm cursor-pointer">
+                    <select {...field} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring">
                       {roles.map((r) => <option key={r.id} value={r.id}>{r.nameAr}</option>)}
                     </select>
                   </FormControl>
@@ -114,12 +131,12 @@ export function UserForm({ open, onOpenChange, user, roles, onSuccess }: UserFor
                   <FormControl>
                     <input type="checkbox" checked={field.value} onChange={field.onChange} className="h-4 w-4 cursor-pointer" />
                   </FormControl>
-                  <FormLabel className="!mt-0 cursor-pointer">المستخدم نشط</FormLabel>
+                  <FormLabel className="mt-0! cursor-pointer">المستخدم نشط</FormLabel>
                   <FormMessage />
                 </FormItem>
               )} />
               <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isPending} className="cursor-pointer">إلغاء</Button>
+                <Button type="button" variant="outline" onClick={handleClose} disabled={isPending} className="cursor-pointer">إلغاء</Button>
                 <Button type="submit" disabled={isPending} className="cursor-pointer">
                   {isPending && <Loader2 className="h-4 w-4 animate-spin me-2" />}حفظ
                 </Button>
@@ -142,7 +159,7 @@ export function UserForm({ open, onOpenChange, user, roles, onSuccess }: UserFor
                 <FormItem>
                   <FormLabel>الدور</FormLabel>
                   <FormControl>
-                    <select {...field} className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm cursor-pointer">
+                    <select {...field} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring">
                       {roles.map((r) => <option key={r.id} value={r.id}>{r.nameAr}</option>)}
                     </select>
                   </FormControl>
@@ -150,7 +167,7 @@ export function UserForm({ open, onOpenChange, user, roles, onSuccess }: UserFor
                 </FormItem>
               )} />
               <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isPending} className="cursor-pointer">إلغاء</Button>
+                <Button type="button" variant="outline" onClick={handleClose} disabled={isPending} className="cursor-pointer">إلغاء</Button>
                 <Button type="submit" disabled={isPending} className="cursor-pointer">
                   {isPending && <Loader2 className="h-4 w-4 animate-spin me-2" />}إضافة
                 </Button>

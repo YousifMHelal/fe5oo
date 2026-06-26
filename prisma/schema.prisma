@@ -27,12 +27,13 @@ model User {
 }
 
 model Worker {
-  id        String       @id @default(cuid())
+  id        String          @id @default(cuid())
   name      String
   phone     String?
-  isActive  Boolean      @default(true)
-  createdAt DateTime     @default(now())
+  isActive  Boolean         @default(true)
+  createdAt DateTime        @default(now())
   items     TicketItem[]
+  expenses  WorkerExpense[]
 }
 
 model Service {
@@ -81,4 +82,14 @@ model AuditLog {
 model Setting {
   key   String @id
   value String
+}
+
+model WorkerExpense {
+  id        String   @id @default(cuid())
+  workerId  String
+  worker    Worker   @relation(fields: [workerId], references: [id])
+  amount    Int
+  note      String?
+  recordedBy String
+  createdAt DateTime @default(now())
 }

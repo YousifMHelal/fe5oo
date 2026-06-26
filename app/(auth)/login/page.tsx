@@ -59,22 +59,23 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
-      <Card className="w-full max-w-sm rounded-xl border bg-card shadow-md">
+    <main className="min-h-screen flex items-center justify-center bg-background px-4 py-8"
+      style={{ background: "radial-gradient(ellipse 680px 520px at 50% 42%, color-mix(in oklch, var(--primary) 14%, transparent), var(--background))" }}>
+      <Card className="w-full max-w-sm rounded-2xl border bg-card shadow-2xl">
         <CardHeader className="flex flex-col items-center gap-3 pb-2 pt-8">
           <div className="relative h-20 w-20">
             <Image
               src="/logo.png"
-              alt="شعار fe5oo BARBERSHOP"
+              alt="شعار Fe5oo BARBERSHOP"
               fill
               className="object-contain"
               priority
             />
           </div>
-          <CardTitle className="font-heading text-2xl font-bold tracking-tight text-center">
-            fe5oo BARBERSHOP
+          <CardTitle className="font-heading text-xl font-extrabold tracking-tight text-center">
+            مرحباً بعودتك
           </CardTitle>
-          <p className="text-sm text-muted-foreground">تسجيل الدخول</p>
+          <p className="text-sm text-muted-foreground">سجّل دخولك للمتابعة</p>
         </CardHeader>
 
         <CardContent className="pb-8 pt-4">
@@ -82,12 +83,15 @@ export default function LoginPage() {
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col gap-4"
-              noValidate
-            >
+              noValidate>
               <FormField
                 control={form.control}
                 name="username"
-                render={({ field }: { field: ControllerRenderProps<LoginInput, "username"> }) => (
+                render={({
+                  field,
+                }: {
+                  field: ControllerRenderProps<LoginInput, "username">;
+                }) => (
                   <FormItem>
                     <FormLabel>اسم المستخدم</FormLabel>
                     <FormControl>
@@ -109,7 +113,11 @@ export default function LoginPage() {
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field }: { field: ControllerRenderProps<LoginInput, "password"> }) => (
+                render={({
+                  field,
+                }: {
+                  field: ControllerRenderProps<LoginInput, "password">;
+                }) => (
                   <FormItem>
                     <FormLabel>كلمة المرور</FormLabel>
                     <FormControl>
@@ -130,8 +138,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={isPending}
-                className="mt-2 h-11 w-full cursor-pointer bg-primary text-primary-foreground font-semibold text-base transition-opacity hover:opacity-90"
-              >
+                className="mt-2 h-11 w-full cursor-pointer bg-primary text-primary-foreground font-semibold text-base transition-opacity hover:opacity-90">
                 {isPending ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />

@@ -8,7 +8,6 @@ import { Pencil, Trash2, Plus } from "lucide-react";
 import { deleteService } from "@/actions/services";
 import { DataTable } from "@/components/shared/DataTable";
 import { MoneyCell } from "@/components/shared/MoneyCell";
-import { StatusPill } from "@/components/shared/StatusPill";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { ServiceForm } from "@/components/services/ServiceForm";
@@ -75,12 +74,6 @@ export function ServicesClient({ services, isAdmin }: ServicesClientProps) {
       header: "السعر",
       enableSorting: true,
       cell: ({ row }) => <MoneyCell amount={row.original.price} />,
-    },
-    {
-      accessorKey: "isActive",
-      header: "الحالة",
-      enableSorting: true,
-      cell: ({ row }) => <StatusPill active={row.original.isActive} />,
     },
     {
       accessorKey: "createdAt",

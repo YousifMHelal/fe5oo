@@ -8,7 +8,7 @@ export function RoleBadge({ role }: { role: string }) {
         "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
         isAdmin
           ? "bg-primary/10 text-primary"
-          : "bg-secondary/10 text-secondary"
+          : "bg-muted text-muted-foreground"
       )}
     >
       {isAdmin ? "مدير" : "كاشير"}

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table";
 import { Pencil, Plus } from "lucide-react";
 import { DataTable } from "@/components/shared/DataTable";
-import { StatusPill } from "@/components/shared/StatusPill";
 import { RoleBadge } from "@/components/shared/RoleBadge";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { UserForm } from "@/components/users/UserForm";
@@ -65,12 +64,6 @@ export function UsersClient({ users, roles }: UsersClientProps) {
       header: "الدور",
       enableSorting: false,
       cell: ({ row }) => <RoleBadge role={row.original.role.key} />,
-    },
-    {
-      accessorKey: "isActive",
-      header: "الحالة",
-      enableSorting: true,
-      cell: ({ row }) => <StatusPill active={row.original.isActive} />,
     },
     {
       accessorKey: "createdAt",

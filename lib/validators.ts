@@ -33,8 +33,15 @@ export const createTicketSchema = z.object({
   note: z.string().max(500).optional(),
 });
 
+export const updateTicketSchema = z.object({
+  id: z.string().min(1),
+  items: z.array(ticketItemInputSchema).min(1, "يجب إضافة خدمة واحدة على الأقل"),
+  note: z.string().max(500).optional(),
+});
+
 export type TicketItemInput = z.infer<typeof ticketItemInputSchema>;
 export type CreateTicketInput = z.infer<typeof createTicketSchema>;
+export type UpdateTicketInput = z.infer<typeof updateTicketSchema>;
 
 // ── Placeholders — populated phase by phase ──────────────────────────────
 // ── Users ─────────────────────────────────────────────────────────────────
@@ -74,3 +81,12 @@ export const settingSchema = z.object({
 export type SettingInput = z.infer<typeof settingSchema>;
 
 export type LoginInput = z.infer<typeof loginSchema>;
+
+// ── Worker Expenses ───────────────────────────────────────────────────────
+export const workerExpenseSchema = z.object({
+  workerId: z.string().min(1, "العامل مطلوب"),
+  amount: z.number({ error: "المبلغ مطلوب" }).int("المبلغ يجب أن يكون عدداً صحيحاً").min(1, "المبلغ لا يقل عن 1"),
+  note: z.string().max(200).optional(),
+});
+
+export type WorkerExpenseInput = z.infer<typeof workerExpenseSchema>;

@@ -4,7 +4,7 @@ import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { serviceSchema, type ServiceInput } from "@/lib/validators";
 import { createService, updateService } from "@/actions/services";
 import { Button } from "@/components/ui/button";
@@ -46,6 +46,10 @@ export function ServiceForm({ open, onOpenChange, service, onSuccess }: ServiceF
     }
   }, [open, service, form]);
 
+  function handleClose() {
+    onOpenChange(false);
+  }
+
   function onSubmit(data: ServiceInput) {
     startTransition(async () => {
       try {
@@ -56,7 +60,7 @@ export function ServiceForm({ open, onOpenChange, service, onSuccess }: ServiceF
           await createService(data);
           toast.success("تمت إضافة الخدمة");
         }
-        onOpenChange(false);
+        handleClose();
         onSuccess();
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "حدث خطأ");
@@ -65,10 +69,23 @@ export function ServiceForm({ open, onOpenChange, service, onSuccess }: ServiceF
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton>
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>{isEdit ? "تعديل الخدمة" : "إضافة خدمة جديدة"}</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle>{isEdit ? "تعديل الخدمة" : "إضافة خدمة جديدة"}</DialogTitle>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className="cursor-pointer"
+              onClick={handleClose}
+              disabled={isPending}
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">إغلاق</span>
+            </Button>
+          </div>
         </DialogHeader>
 
         <Form {...form}>
@@ -112,7 +129,7 @@ export function ServiceForm({ open, onOpenChange, service, onSuccess }: ServiceF
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={handleClose}
                 disabled={isPending}
                 className="cursor-pointer"
               >

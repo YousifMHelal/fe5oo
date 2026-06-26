@@ -3,22 +3,24 @@
 import { useState, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Plus, Trash2, ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react";
+import { Plus, Trash2, Pencil, Printer, ChevronsUpDown, ChevronUp, ChevronDown } from "lucide-react";
 import { deleteTicket } from "@/actions/tickets";
+import { printReceipt } from "@/lib/print";
 import { MoneyCell } from "@/components/shared/MoneyCell";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
-import { TicketForm } from "@/components/tickets/TicketForm";
+import { TicketForm, type TicketForEdit } from "@/components/tickets/TicketForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { cn } from "@/lib/utils";
 
 type Worker = { id: string; name: string };
 type Service = { id: string; title: string; price: number };
 
 type TicketItem = {
   id: string;
+  workerId: string;
+  serviceId: string;
   priceSnapshot: number;
   worker: { name: string };
   service: { title: string };
@@ -46,8 +48,8 @@ interface TransactionsClientProps {
 export function TransactionsClient({ tickets, workers, services, isAdmin }: TransactionsClientProps) {
   const router = useRouter();
   const [formOpen, setFormOpen] = useState(false);
+  const [editingTicket, setEditingTicket] = useState<TicketForEdit | undefined>(undefined);
   const [deleting, setDeleting] = useState<Ticket | null>(null);
-  const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("createdAt");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
@@ -55,12 +57,18 @@ export function TransactionsClient({ tickets, workers, services, isAdmin }: Tran
 
   const refresh = useCallback(() => router.refresh(), [router]);
 
-  function toggleExpand(id: string) {
-    setExpanded((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
+  function openCreate() {
+    setEditingTicket(undefined);
+    setFormOpen(true);
+  }
+
+  function openEdit(ticket: Ticket) {
+    setEditingTicket({
+      id: ticket.id,
+      note: ticket.note,
+      items: ticket.items.map((i) => ({ workerId: i.workerId, serviceId: i.serviceId })),
     });
+    setFormOpen(true);
   }
 
   function toggleSort(key: SortKey) {
@@ -90,7 +98,6 @@ export function TransactionsClient({ tickets, workers, services, isAdmin }: Tran
   const filtered = tickets.filter((t) => {
     if (!q) return true;
     return (
-      t.cashier.fullName.toLowerCase().includes(q) ||
       t.items.some(
         (i) =>
           i.worker.name.toLowerCase().includes(q) ||
@@ -115,12 +122,14 @@ export function TransactionsClient({ tickets, workers, services, isAdmin }: Tran
       : <ChevronDown className="h-3.5 w-3.5 text-foreground" />;
   }
 
+  const totalCols = 5;
+
   return (
     <>
       <PageHeader
         title="المعاملات"
         action={
-          <Button onClick={() => setFormOpen(true)} className="cursor-pointer gap-2">
+          <Button onClick={openCreate} className="cursor-pointer gap-2">
             <Plus className="h-4 w-4" />
             معاملة جديدة
           </Button>
@@ -139,108 +148,101 @@ export function TransactionsClient({ tickets, workers, services, isAdmin }: Tran
           <table className="w-full caption-bottom text-sm">
             <thead className="[&_tr]:border-b">
               <tr className="bg-muted/50">
-                <th className="h-10 px-2 text-start align-middle font-medium text-foreground w-8" />
                 <th
-                  className="h-10 px-2 text-start align-middle font-semibold text-foreground cursor-pointer select-none"
+                  className="h-10 px-3 text-start align-middle font-semibold text-foreground cursor-pointer select-none"
                   onClick={() => toggleSort("createdAt")}
                 >
                   <div className="flex items-center gap-1">التاريخ <SortIcon col="createdAt" /></div>
                 </th>
-                <th className="h-10 px-2 text-start align-middle font-semibold text-foreground">الكاشير</th>
+                <th className="h-10 px-3 text-start align-middle font-semibold text-foreground">العامل</th>
+                <th className="h-10 px-3 text-start align-middle font-semibold text-foreground">الخدمات</th>
                 <th
-                  className="h-10 px-2 text-start align-middle font-semibold text-foreground cursor-pointer select-none"
-                  onClick={() => toggleSort("items")}
-                >
-                  <div className="flex items-center gap-1">الخدمات <SortIcon col="items" /></div>
-                </th>
-                <th
-                  className="h-10 px-2 text-start align-middle font-semibold text-foreground cursor-pointer select-none"
+                  className="h-10 px-3 text-start align-middle font-semibold text-foreground cursor-pointer select-none"
                   onClick={() => toggleSort("total")}
                 >
                   <div className="flex items-center gap-1">الإجمالي <SortIcon col="total" /></div>
                 </th>
-                {isAdmin && <th className="h-10 px-2 text-start align-middle font-medium text-foreground" />}
+                <th className="h-10 px-3 text-start align-middle font-medium text-foreground" />
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
               {sorted.length === 0 ? (
                 <tr>
-                  <td colSpan={isAdmin ? 6 : 5} className="p-0">
+                  <td colSpan={totalCols} className="p-0">
                     <EmptyState title="لا توجد معاملات" description="جرب تغيير كلمة البحث أو الفترة الزمنية" />
                   </td>
                 </tr>
               ) : (
-                sorted.flatMap((ticket) => {
-                  const isOpen = expanded.has(ticket.id);
-                  return [
-                    <tr
-                      key={ticket.id}
-                      className={cn(
-                        "border-b transition-colors duration-150",
-                        isOpen ? "bg-muted/30" : "hover:bg-muted/30"
-                      )}
-                    >
-                      <td className="p-2">
+                sorted.map((ticket) => (
+                  <tr key={ticket.id} className="border-b transition-colors duration-150 hover:bg-muted/30">
+                    <td className="px-3 py-2 whitespace-nowrap">
+                      <div className="flex flex-col gap-0.5">
+                        <span>
+                          {new Date(ticket.createdAt).toLocaleString("ar-EG", {
+                            dateStyle: "short",
+                            timeStyle: "short",
+                          })}
+                        </span>
+                        {ticket.note && (
+                          <span className="text-xs text-muted-foreground">ملاحظة: {ticket.note}</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-3 py-2">
+                      {[...new Set(ticket.items.map((i) => i.worker.name))].join("، ")}
+                    </td>
+                    <td className="px-3 py-2 text-muted-foreground">
+                      {ticket.items.map((i) => i.service.title).join("، ")}
+                    </td>
+                    <td className="px-3 py-2 font-medium tabular-nums">
+                      <MoneyCell amount={ticket.total} />
+                    </td>
+                    <td className="px-3 py-2">
+                      <div className="flex items-center gap-1">
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-7 w-7 cursor-pointer"
-                          onClick={() => toggleExpand(ticket.id)}
-                          aria-label={isOpen ? "طي" : "توسيع"}
+                          className="h-8 w-8 cursor-pointer"
+                          onClick={() =>
+                            printReceipt({
+                              id: ticket.id,
+                              total: ticket.total,
+                              note: ticket.note,
+                              createdAt: ticket.createdAt,
+                              cashierName: ticket.cashier.fullName,
+                              items: ticket.items,
+                            })
+                          }
+                          aria-label="طباعة الإيصال"
                         >
-                          {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          <Printer className="h-4 w-4" />
                         </Button>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">
-                        {new Date(ticket.createdAt).toLocaleString("ar-EG", {
-                          dateStyle: "short",
-                          timeStyle: "short",
-                        })}
-                      </td>
-                      <td className="p-2">{ticket.cashier.fullName}</td>
-                      <td className="p-2">{ticket.items.length} خدمة</td>
-                      <td className="p-2 font-medium">
-                        <MoneyCell amount={ticket.total} />
-                      </td>
-                      {isAdmin && (
-                        <td className="p-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 cursor-pointer text-destructive hover:text-destructive"
-                            onClick={() => setDeleting(ticket)}
-                            aria-label="حذف"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </td>
-                      )}
-                    </tr>,
-                    isOpen && (
-                      <tr key={`${ticket.id}-detail`} className="bg-muted/10 border-b">
-                        <td colSpan={isAdmin ? 6 : 5} className="px-4 py-3">
-                          <div className="space-y-1.5 ms-6">
-                            {ticket.items.map((item) => (
-                              <div key={item.id} className="flex items-center justify-between text-sm">
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                  <span>{item.worker.name}</span>
-                                  <span>·</span>
-                                  <span>{item.service.title}</span>
-                                </div>
-                                <MoneyCell amount={item.priceSnapshot} />
-                              </div>
-                            ))}
-                            {ticket.note && (
-                              <p className="text-xs text-muted-foreground pt-1.5 border-t border-border/40 mt-1.5">
-                                ملاحظة: {ticket.note}
-                              </p>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ),
-                  ].filter(Boolean);
-                })
+                        {isAdmin && (
+                          <>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 cursor-pointer"
+                              onClick={() => openEdit(ticket)}
+                              aria-label="تعديل"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 cursor-pointer text-destructive hover:text-destructive"
+                              onClick={() => setDeleting(ticket)}
+                              aria-label="حذف"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
@@ -253,6 +255,7 @@ export function TransactionsClient({ tickets, workers, services, isAdmin }: Tran
         workers={workers}
         services={services}
         onSuccess={refresh}
+        editTicket={editingTicket}
       />
 
       {isAdmin && (

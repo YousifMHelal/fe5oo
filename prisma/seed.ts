@@ -25,7 +25,7 @@ async function main() {
 
   // ── Users ────────────────────────────────────────────────────────────────
   const adminHash = await bcrypt.hash("admin123", 12);
-  const cashierHash = await bcrypt.hash("cashier123", 12);
+  const cashierHash = await bcrypt.hash("", 12);
 
   const adminUser = await prisma.user.upsert({
     where: { username: "admin" },

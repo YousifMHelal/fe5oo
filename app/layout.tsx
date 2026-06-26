@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "fe5oo BARBERSHOP",
+  title: "Fe5oo ",
   description: "نظام إدارة صالون الحلاقة",
   icons: { icon: "/favicon.ico" },
 };
@@ -15,16 +15,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <body>
+      <body suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem={false}
-          disableTransitionOnChange
-        >
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
+          disableTransitionOnChange>
+          <TooltipProvider>{children}</TooltipProvider>
           <Toaster position="top-center" richColors />
         </ThemeProvider>
       </body>

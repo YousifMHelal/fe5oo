@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type AuditLog = {
@@ -38,32 +36,11 @@ interface LogsClientProps {
   logs: AuditLog[];
 }
 
-function JsonBlock({ raw }: { raw: string | null }) {
-  if (!raw) return <span className="text-muted-foreground text-xs">—</span>;
-  try {
-    return (
-      <pre className="text-xs bg-muted rounded p-2 overflow-x-auto max-w-full whitespace-pre-wrap break-all">
-        {JSON.stringify(JSON.parse(raw), null, 2)}
-      </pre>
-    );
-  } catch {
-    return <span className="text-xs text-muted-foreground">{raw}</span>;
-  }
-}
 
 export function LogsClient({ logs }: LogsClientProps) {
   const [search, setSearch] = useState("");
   const [entityFilter, setEntityFilter] = useState("");
   const [actionFilter, setActionFilter] = useState("");
-  const [expanded, setExpanded] = useState<Set<string>>(new Set());
-
-  function toggleExpand(id: string) {
-    setExpanded((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }
 
   const entities = [...new Set(logs.map((l) => l.entity))].sort();
   const actions = [...new Set(logs.map((l) => l.action))].sort();
@@ -98,7 +75,7 @@ export function LogsClient({ logs }: LogsClientProps) {
           <select
             value={entityFilter}
             onChange={(e) => setEntityFilter(e.target.value)}
-            className="rounded-md border border-input bg-background px-3 py-2 text-sm cursor-pointer"
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring"
           >
             <option value="">جميع الكيانات</option>
             {entities.map((e) => <option key={e} value={e}>{e}</option>)}
@@ -106,7 +83,7 @@ export function LogsClient({ logs }: LogsClientProps) {
           <select
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
-            className="rounded-md border border-input bg-background px-3 py-2 text-sm cursor-pointer"
+            className="rounded-md border border-border bg-background px-3 py-2 text-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring"
           >
             <option value="">جميع الإجراءات</option>
             {actions.map((a) => <option key={a} value={a}>{ACTION_LABELS[a] ?? a}</option>)}
@@ -117,75 +94,39 @@ export function LogsClient({ logs }: LogsClientProps) {
           <table className="w-full caption-bottom text-sm">
             <thead className="[&_tr]:border-b">
               <tr className="bg-muted/50">
-                <th className="h-10 px-2 text-start font-semibold text-foreground w-8" />
-                <th className="h-10 px-2 text-start font-semibold text-foreground">التاريخ</th>
-                <th className="h-10 px-2 text-start font-semibold text-foreground">المستخدم</th>
-                <th className="h-10 px-2 text-start font-semibold text-foreground">الإجراء</th>
-                <th className="h-10 px-2 text-start font-semibold text-foreground">الكيان</th>
-                <th className="h-10 px-2 text-start font-semibold text-foreground">الملخص</th>
+                <th className="h-10 px-3 text-start font-semibold text-foreground">التاريخ</th>
+                <th className="h-10 px-3 text-start font-semibold text-foreground">المستخدم</th>
+                <th className="h-10 px-3 text-start font-semibold text-foreground">الإجراء</th>
+                <th className="h-10 px-3 text-start font-semibold text-foreground">الكيان</th>
+                <th className="h-10 px-3 text-start font-semibold text-foreground">الملخص</th>
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-0">
+                  <td colSpan={5} className="p-0">
                     <EmptyState title="لا توجد نتائج" description="جرب تغيير فلاتر البحث" />
                   </td>
                 </tr>
               ) : (
-                filtered.flatMap((log) => {
-                  const isOpen = expanded.has(log.id);
-                  const hasDiff = !!(log.before || log.after);
-                  return [
-                    <tr
-                      key={log.id}
-                      className={cn(
-                        "border-b transition-colors duration-150",
-                        isOpen ? "bg-muted/30" : "hover:bg-muted/30"
-                      )}
-                    >
-                      <td className="p-2">
-                        {hasDiff && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 cursor-pointer"
-                            onClick={() => toggleExpand(log.id)}
-                          >
-                            {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                          </Button>
-                        )}
-                      </td>
-                      <td className="p-2 whitespace-nowrap text-muted-foreground text-xs">
-                        {new Date(log.createdAt).toLocaleString("ar-EG", { dateStyle: "short", timeStyle: "short" })}
-                      </td>
-                      <td className="p-2">{log.actorName}</td>
-                      <td className="p-2">
-                        <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full", ACTION_COLORS[log.action] ?? "bg-muted text-muted-foreground")}>
-                          {ACTION_LABELS[log.action] ?? log.action}
-                        </span>
-                      </td>
-                      <td className="p-2 text-muted-foreground text-xs">{log.entity}</td>
-                      <td className="p-2">{log.summaryAr}</td>
-                    </tr>,
-                    isOpen && hasDiff && (
-                      <tr key={`${log.id}-detail`} className="bg-muted/10 border-b">
-                        <td colSpan={6} className="px-6 py-3">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div>
-                              <p className="text-xs font-medium text-muted-foreground mb-1">قبل</p>
-                              <JsonBlock raw={log.before} />
-                            </div>
-                            <div>
-                              <p className="text-xs font-medium text-muted-foreground mb-1">بعد</p>
-                              <JsonBlock raw={log.after} />
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ),
-                  ].filter(Boolean);
-                })
+                filtered.map((log) => (
+                  <tr
+                    key={log.id}
+                    className="border-b transition-colors duration-150 hover:bg-muted/30"
+                  >
+                    <td className="px-3 py-2 whitespace-nowrap text-muted-foreground text-xs">
+                      {new Date(log.createdAt).toLocaleString("ar-EG", { dateStyle: "short", timeStyle: "short" })}
+                    </td>
+                    <td className="px-3 py-2">{log.actorName}</td>
+                    <td className="px-3 py-2">
+                      <span className={cn("text-xs font-medium px-2 py-0.5 rounded-full", ACTION_COLORS[log.action] ?? "bg-muted text-muted-foreground")}>
+                        {ACTION_LABELS[log.action] ?? log.action}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2 text-muted-foreground text-xs">{log.entity}</td>
+                    <td className="px-3 py-2">{log.summaryAr}</td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>

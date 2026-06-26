@@ -4,7 +4,7 @@ interface AuditParams {
   actorId?: string | null;
   actorName: string;
   action: "CREATE" | "UPDATE" | "DELETE" | "LOGIN";
-  entity: "Worker" | "Service" | "Ticket" | "User" | "Setting";
+  entity: "Worker" | "Service" | "Ticket" | "User" | "Setting" | "WorkerExpense";
   entityId?: string | null;
   summaryAr: string;
   before?: object | null;

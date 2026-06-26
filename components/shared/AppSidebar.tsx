@@ -72,7 +72,7 @@ function SidebarBrand({ collapsed }: { collapsed: boolean }) {
   return (
     <div
       className={cn(
-        "flex items-center gap-3 px-3 py-4 border-b border-border",
+        "flex items-center gap-3 px-3 h-14 shrink-0 border-b border-border",
         collapsed && "justify-center px-2"
       )}
     >
@@ -129,19 +129,23 @@ export function AppSidebar({ mobileOpen, onMobileOpenChange }: AppSidebarProps) 
         <SidebarBrand collapsed={collapsed} />
         <SidebarNav collapsed={collapsed} />
         <div className="p-2 border-t border-border">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-full h-9 cursor-pointer"
+          <button
             onClick={() => setCollapsed((c) => !c)}
             aria-label={collapsed ? "توسيع القائمة" : "طي القائمة"}
+            className={cn(
+              "flex items-center gap-3 w-full rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer",
+              collapsed && "justify-center px-2"
+            )}
           >
             {collapsed ? (
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-5 w-5 shrink-0" />
             ) : (
-              <ChevronRight className="h-4 w-4" />
+              <>
+                <ChevronRight className="h-5 w-5 shrink-0" />
+                <span className="truncate">طي القائمة</span>
+              </>
             )}
-          </Button>
+          </button>
         </div>
       </aside>
 

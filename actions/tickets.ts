@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { session, requireRole } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
-import { createTicketSchema } from "@/lib/validators";
+import { createTicketSchema, updateTicketSchema } from "@/lib/validators";
 
 export async function createTicket(input: unknown) {
   const s = await session();
@@ -46,7 +46,69 @@ export async function createTicket(input: unknown) {
   });
 
   revalidatePath("/transactions");
-  return { ok: true, id: ticket.id };
+  return {
+    ok: true,
+    id: ticket.id,
+    ticket: {
+      id: ticket.id,
+      total: ticket.total,
+      note: ticket.note,
+      createdAt: ticket.createdAt,
+      items: ticket.items.map((i) => ({
+        worker: { name: i.worker.name },
+        service: { title: i.service.title },
+        priceSnapshot: i.priceSnapshot,
+      })),
+    },
+  };
+}
+
+export async function updateTicket(input: unknown) {
+  const s = await requireRole("ADMIN");
+  const data = updateTicketSchema.parse(input);
+
+  const existing = await prisma.ticket.findUniqueOrThrow({
+    where: { id: data.id },
+    include: { items: true },
+  });
+
+  const lineItems = await Promise.all(
+    data.items.map(async (item) => {
+      const worker = await prisma.worker.findUnique({ where: { id: item.workerId } });
+      if (!worker || !worker.isActive) throw new Error("العامل غير موجود أو موقوف");
+      const service = await prisma.service.findUnique({ where: { id: item.serviceId } });
+      if (!service || !service.isActive) throw new Error("الخدمة غير موجودة أو موقوفة");
+      return { workerId: item.workerId, serviceId: item.serviceId, priceSnapshot: service.price };
+    })
+  );
+
+  const total = lineItems.reduce((sum, i) => sum + i.priceSnapshot, 0);
+
+  await prisma.$transaction([
+    prisma.ticketItem.deleteMany({ where: { ticketId: data.id } }),
+    prisma.ticket.update({
+      where: { id: data.id },
+      data: {
+        total,
+        note: data.note ?? null,
+        items: { create: lineItems },
+      },
+    }),
+  ]);
+
+  await logAudit({
+    actorId: s.user.id,
+    actorName: s.user.fullName,
+    action: "UPDATE",
+    entity: "Ticket",
+    entityId: data.id,
+    summaryAr: `عدّل تذكرة من ${existing.total} إلى ${total} ج.م`,
+    before: { total: existing.total, itemCount: existing.items.length },
+    after: { total, itemCount: lineItems.length },
+  });
+
+  revalidatePath("/transactions");
+  return { ok: true };
 }
 
 export async function deleteTicket(id: string) {

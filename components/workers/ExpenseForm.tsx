@@ -3,10 +3,10 @@
 import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { toast } from "sonner";
 import { Loader2, X } from "lucide-react";
-import { workerSchema, type WorkerInput } from "@/lib/validators";
-import { createWorker, updateWorker } from "@/actions/workers";
+import { createWorkerExpense } from "@/actions/expenses";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,43 +24,48 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-interface WorkerFormProps {
+const formSchema = z.object({
+  amount: z
+    .string()
+    .min(1, "المبلغ مطلوب")
+    .refine((v) => Number.isInteger(Number(v)) && Number(v) > 0, "مبلغ صحيح أكبر من صفر"),
+  note: z.string().max(200).optional(),
+});
+type FormValues = z.infer<typeof formSchema>;
+
+interface ExpenseFormProps {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  worker?: { id: string; name: string; phone?: string | null } | null;
+  worker: { id: string; name: string } | null;
   onSuccess: () => void;
 }
 
-export function WorkerForm({ open, onOpenChange, worker, onSuccess }: WorkerFormProps) {
+export function ExpenseForm({ open, onOpenChange, worker, onSuccess }: ExpenseFormProps) {
   const [isPending, startTransition] = useTransition();
-  const isEdit = !!worker;
 
-  const form = useForm<WorkerInput>({
-    resolver: zodResolver(workerSchema),
-    defaultValues: { name: "", phone: "" },
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { amount: "", note: "" },
   });
 
   useEffect(() => {
-    if (open) {
-      form.reset(worker ? { name: worker.name, phone: worker.phone ?? "" } : { name: "", phone: "" });
-    }
-  }, [open, worker, form]);
+    if (open) form.reset({ amount: "", note: "" });
+  }, [open, form]);
 
   function handleClose() {
     onOpenChange(false);
   }
 
-  function onSubmit(data: WorkerInput) {
+  function onSubmit(data: FormValues) {
+    if (!worker) return;
     startTransition(async () => {
       try {
-        const payload = { ...data, phone: data.phone || undefined };
-        if (isEdit && worker) {
-          await updateWorker(worker.id, payload);
-          toast.success("تم تحديث بيانات العامل");
-        } else {
-          await createWorker(payload);
-          toast.success("تمت إضافة العامل");
-        }
+        await createWorkerExpense({
+          workerId: worker.id,
+          amount: Number(data.amount),
+          note: data.note || undefined,
+        });
+        toast.success(`تم تسجيل السلفة للعامل ${worker.name}`);
         handleClose();
         onSuccess();
       } catch (err) {
@@ -71,10 +76,12 @@ export function WorkerForm({ open, onOpenChange, worker, onSuccess }: WorkerForm
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent showCloseButton={false}>
+      <DialogContent showCloseButton={false} className="sm:max-w-sm">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle>{isEdit ? "تعديل بيانات العامل" : "إضافة عامل جديد"}</DialogTitle>
+            <DialogTitle>
+              سلفة / مصروف — {worker?.name}
+            </DialogTitle>
             <Button
               type="button"
               variant="ghost"
@@ -93,12 +100,19 @@ export function WorkerForm({ open, onOpenChange, worker, onSuccess }: WorkerForm
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
             <FormField
               control={form.control}
-              name="name"
+              name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>الاسم</FormLabel>
+                  <FormLabel>المبلغ (ج.م)</FormLabel>
                   <FormControl>
-                    <Input placeholder="اسم العامل" {...field} />
+                    <Input
+                      type="number"
+                      min={1}
+                      step={1}
+                      placeholder="0"
+                      className="tabular-nums"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -107,12 +121,12 @@ export function WorkerForm({ open, onOpenChange, worker, onSuccess }: WorkerForm
 
             <FormField
               control={form.control}
-              name="phone"
+              name="note"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>رقم الهاتف (اختياري)</FormLabel>
+                  <FormLabel>ملاحظة (اختياري)</FormLabel>
                   <FormControl>
-                    <Input placeholder="01xxxxxxxxx" {...field} />
+                    <Input placeholder="سبب السلفة..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -123,7 +137,7 @@ export function WorkerForm({ open, onOpenChange, worker, onSuccess }: WorkerForm
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={handleClose}
                 disabled={isPending}
                 className="cursor-pointer"
               >
@@ -131,7 +145,7 @@ export function WorkerForm({ open, onOpenChange, worker, onSuccess }: WorkerForm
               </Button>
               <Button type="submit" disabled={isPending} className="cursor-pointer">
                 {isPending && <Loader2 className="h-4 w-4 animate-spin me-2" />}
-                {isEdit ? "حفظ التعديلات" : "إضافة"}
+                تسجيل السلفة
               </Button>
             </div>
           </form>
