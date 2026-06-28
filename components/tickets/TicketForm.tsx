@@ -173,52 +173,59 @@ export function TicketForm({
 
               {/* Service line items */}
               <div className="rounded-lg border border-border divide-y divide-border">
-                {fields.map((field, index) => (
-                  <div key={field.id} className="flex items-center gap-2 px-3 py-1.5">
-                    <FormField
-                      control={form.control}
-                      name={`items.${index}.serviceId`}
-                      render={({ field: f }) => (
-                        <FormItem className="flex-1 mb-0">
-                          <FormControl>
-                            <select
-                              {...f}
-                              className="w-full bg-transparent text-sm focus:outline-none cursor-pointer py-1"
-                            >
-                              <option value="">اختر خدمة</option>
-                              {services.map((s) => (
-                                <option key={s.id} value={s.id}>
-                                  {s.title} — {formatEGP(s.price)}
-                                </option>
-                              ))}
-                            </select>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
+                {fields.map((field, index) => {
+                  const pickedElsewhere = new Set(
+                    watchedItems.filter((_, i) => i !== index).map((i) => i.serviceId).filter(Boolean)
+                  );
+                  return (
+                    <div key={field.id} className="flex items-center gap-2 px-3 py-1.5">
+                      <FormField
+                        control={form.control}
+                        name={`items.${index}.serviceId`}
+                        render={({ field: f }) => (
+                          <FormItem className="flex-1 mb-0">
+                            <FormControl>
+                              <select
+                                {...f}
+                                className="w-full bg-transparent text-sm focus:outline-none cursor-pointer py-1"
+                              >
+                                <option value="">اختر خدمة</option>
+                                {services.map((s) => (
+                                  <option key={s.id} value={s.id} disabled={pickedElsewhere.has(s.id)}>
+                                    {s.title} — {formatEGP(s.price)}
+                                  </option>
+                                ))}
+                              </select>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <span className="text-xs tabular-nums text-muted-foreground min-w-13 text-end">
+                        {watchedItems[index]?.serviceId ? formatEGP(getPrice(watchedItems[index].serviceId)) : ""}
+                      </span>
+                      {fields.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className="text-muted-foreground hover:text-destructive transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
                       )}
-                    />
-                    <span className="text-xs tabular-nums text-muted-foreground min-w-13 text-end">
-                      {watchedItems[index]?.serviceId ? formatEGP(getPrice(watchedItems[index].serviceId)) : ""}
-                    </span>
-                    {fields.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="text-muted-foreground hover:text-destructive transition-colors cursor-pointer"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => append({ serviceId: "" })}
-                  className="flex items-center gap-1.5 w-full px-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                >
-                  <Plus className="h-3 w-3" />
-                  إضافة خدمة
-                </button>
+                    </div>
+                  );
+                })}
+                {fields.length < services.length && (
+                  <button
+                    type="button"
+                    onClick={() => append({ serviceId: "" })}
+                    className="flex items-center gap-1.5 w-full px-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  >
+                    <Plus className="h-3 w-3" />
+                    إضافة خدمة
+                  </button>
+                )}
               </div>
 
               {/* Form-level items error */}

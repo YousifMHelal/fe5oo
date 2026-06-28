@@ -6,6 +6,14 @@ import { session } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { workerExpenseSchema } from "@/lib/validators";
 
+export async function getWorkerExpenses(workerId: string) {
+  await session(); // must be authenticated
+  return prisma.workerExpense.findMany({
+    where: { workerId },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 export async function createWorkerExpense(input: unknown) {
   const s = await session();
   const data = workerExpenseSchema.parse(input);

@@ -151,6 +151,7 @@ export function WorkersClient({ workers, isAdmin }: WorkersClientProps) {
         onOpenChange={(v) => { if (!v) setExpenseWorker(null); }}
         worker={expenseWorker}
         onSuccess={refresh}
+        isAdmin={isAdmin}
       />
 
       {isAdmin && (
